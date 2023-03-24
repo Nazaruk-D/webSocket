@@ -1,29 +1,28 @@
-const WebSocket = require('ws');
-const PORT = process.env.PORT || 8080;
+const WebsocketFunction = require('ws');
+const mysql = require('mysql');
 
-const wss = new WebSocket.Server({ port: PORT, perMessageDeflate: false });
 
-wss.on('connection', function connection(ws) {
-    console.log('client connected');
-
-    ws.on('message', function incoming(data) {
-        const obj = JSON.parse(data);
-        if (obj.action === 'fetchMessages') {
-            fetchMessages(ws, obj.userName);
-        }
-        if (obj.action === 'sendMessage') {
-            newMessage(ws, obj)
-        }
-        if (obj.action === 'setUserName') {
-            ws.userName = obj.userName
-        }
-        if (obj.action === 'fetchUsers') {
-            fetchUsers(ws);
-        }
-    });
-    ws.send(JSON.stringify('Hello, client!'));
+const connection = mysql.createConnection({
+    host: 'gateway01.eu-central-1.prod.aws.tidbcloud.com',
+    port: 4000,
+    user: '2cuErdwPjzvhbTv.root',
+    password: 'qpYHPLYC8xfASH2b',
+    database: 'mail',
+    ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true
+    }
 });
 
+connection.connect((err) => {
+    if (err) {
+        return console.log(JSON.stringify(err))
+    } else {
+        return console.log('Connection successful')
+    }
+});
+
+const wss = new WebsocketFunction.Server({ port: 8080, perMessageDeflate: false });
 
 async function fetchMessages(ws, userName) {
     try {
@@ -39,21 +38,21 @@ async function fetchMessages(ws, userName) {
         });
     } catch (e) {
         console.log(e);
-        ws.send(JSON.stringify({message: 'Get messages error', statusCode: 400}));
+        ws.send(JSON.stringify({ message: 'Get messages error', statusCode: 400 }));
     }
 }
 
-async function fetchUsers (ws) {
+async function fetchUsers(ws) {
     try {
         const users = `SELECT name FROM Users;`;
 
         connection.query(users, (error, results) => {
             if (error) throw error;
-            ws.send(JSON.stringify({action: "fetchUsers", message: 'Users transfer was successful', data: results, statusCode: 200}));
+            ws.send(JSON.stringify({ action: "fetchUsers", message: 'Users transfer was successful', data: results, statusCode: 200 }));
         });
     } catch (e) {
         console.log(e);
-        ws.send(JSON.stringify({message: 'Get users error', statusCode: 400}));
+        ws.send(JSON.stringify({ message: 'Get users error', statusCode: 400 }));
     }
 }
 
@@ -126,5 +125,4 @@ async function newMessage(ws, obj) {
     }
 }
 
-
-module.exports = wss;
+module.exports = { wss, fetchMessages, fetchUsers, newMessage };
