@@ -1,5 +1,6 @@
 const WebsocketFunction = require('ws');
-const mysql = require('mysql');
+const mysql = require("mysql");
+
 
 
 const connection = mysql.createConnection({
@@ -21,6 +22,7 @@ connection.connect((err) => {
         return console.log('Connection successful')
     }
 });
+
 
 const wss = new WebsocketFunction.Server({ port: 8080, perMessageDeflate: false });
 
@@ -125,4 +127,4 @@ async function newMessage(ws, obj) {
     }
 }
 
-module.exports = { wss, fetchMessages, fetchUsers, newMessage };
+module.exports = { wss, fetchMessages, fetchUsers, newMessage, connection };
