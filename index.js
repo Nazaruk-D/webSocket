@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser('secret key'));
 
 app.use(cookieParser('secret key'))
-app.use('/auth', authRouter);
+// app.use('/auth', authRouter);
 
 wss.on('connection', function connection(ws) {
     console.log('client connected');
@@ -50,7 +50,7 @@ wss.on('listening', () => {
     console.log(`WebSocket server is listening on port ${PORTWS}`);
 });
 
-app.listen(PORT, () => {
-    console.log(`I started listening port: ${PORT}`)
-})
+// app.listen(PORT, () => {
+//     console.log(`I started listening port: ${PORT}`)
+// })
 
