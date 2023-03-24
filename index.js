@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 7542;
-// const PORTWS = process.env.PORT || 8080;
+const PORTWS = process.env.PORT || 8080;
 const {wss, fetchMessages, newMessage, fetchUsers} = require('./websocketFunction');
 const authRouter = require('./authRouter')
 
@@ -46,7 +46,7 @@ wss.on('connection', function connection(ws) {
 });
 
 wss.on('listening', () => {
-    console.log(`WebSocket server is listening on port ${8080}`);
+    console.log(`WebSocket server is listening on port ${PORTWS}`);
 });
 
 app.listen(PORT, () => {
