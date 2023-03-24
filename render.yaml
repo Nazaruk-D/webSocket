@@ -1,0 +1,5 @@
+services:
+  - name: my-app
+    ports:
+      - 80
+      - 8080
