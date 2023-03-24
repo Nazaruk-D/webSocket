@@ -1,7 +1,7 @@
 const WebsocketFunction = require('ws');
 const mysql = require("mysql");
 
-const PORTWS = process.env.PORT || 8080;
+const PORTWS = process.env.PORTWS || 8080;
 
 
 const connection = mysql.createConnection({
