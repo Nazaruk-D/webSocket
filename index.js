@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 8080;
-const {wss, fetchMessages, newMessage, fetchUsers} = require('./websocketFunction'); // подключаем файл с WebSocket
+const {wss, fetchMessages, newMessage, fetchUsers} = require('./websocketFunction');
 
 const corsOptions = {
     origin: (origin, callback) => {
@@ -18,10 +18,6 @@ const jsonBodyMiddleWare = express.json();
 app.use(jsonBodyMiddleWare);
 app.use(cors(corsOptions));
 app.use(cookieParser('secret key'));
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
-});
 
 wss.on('listening', () => {
     console.log(`WebSocket server is listening on port ${PORT}`);
